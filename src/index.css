@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  /* ═══ ENTRY GATE ═══ */
+  --gate-bg: radial-gradient(ellipse at 65% 40%, #1ab8b8 0%, #1a8080 30%, #0d3060 60%, #071525 100%);
+  --gate-circle-stroke: rgba(255,255,255,0.25);
+  --gate-circle-width: 0.8px;
+
+  /* ═══ HERO ═══ */
+  --hero-overlay-left: rgba(5,12,30,0.96);
+  --hero-teal-right: #00c8c8;
+  --hero-heading: #ffffff;
+  --hero-btn: #3d35b5; /* medium indigo-purple */
+  --hero-btn-shadow: rgba(61,53,181,0.5);
+  --hero-body: rgba(255,255,255,0.78);
+  --hero-label: rgba(255,255,255,0.55);
+
+  /* ═══ DARK SECTIONS (Reconnecting, Flow, Principles, Perspectives) ═══ */
+  --dark-bg: linear-gradient(135deg, #0a1628 0%, #071525 55%, #153560 100%);
+  --dark-right-glow: radial-gradient(ellipse at 100% 50%, rgba(26,160,180,0.35) 0%, transparent 50%);
+  --dark-text: #ffffff;
+  --dark-circle-stroke: rgba(255,255,255,0.12);
+  --dark-label-dot: #4fc3d0; /* teal dot before section labels */
+
+  /* ═══ PALE/LIGHT SECTIONS (Vision, Innovating, Meet Aleph) ═══ */
+  --white-bg: #ffffff;
+  --pale-sky: #c8eaf0;
+  --pale-aleph: #d8eff8;
+  --light-text: #0a1e3a; /* dark navy on light bg */
+
+  /* ═══ FOOTER ═══ */
+  --footer-bg: linear-gradient(135deg, #060f1e 0%, #1a4060 60%, #071525 100%);
+  --footer-text: #ffffff;
+  --footer-muted: rgba(255,255,255,0.45);
+
+  /* ═══ TRIANGLE (Innovating section) ═══ */
+  --triangle-top: #1a5878;
+  --triangle-bottom: #4fc3d0;
+
+  /* ═══ UNIVERSAL UI ═══ */
+  --center-line: rgba(255,255,255,0.20);
+  --center-line-glow: rgba(255,255,255,0.06);
+  --cursor-ring: rgba(255,255,255,0.55);
+  --scroll-arrow-border: rgba(255,255,255,0.3);
+  --section-dot: #4fc3d0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  background-color: var(--dark-bg-color, #071525); /* Default dark bg */
+  color: white;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Lenis recommended styles */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}

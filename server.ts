@@ -1,0 +1,211 @@
+import express from "express";
+import { createServer as createViteServer } from "vite";
+import Database from "better-sqlite3";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const db = new Database("cms.db");
+
+// Initialize database
+db.exec(`
+  CREATE TABLE IF NOT EXISTS posts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    category TEXT,
+    date DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE TABLE IF NOT EXISTS projects (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    client TEXT,
+    type TEXT,
+    category TEXT,
+    description TEXT,
+    image TEXT,
+    gallery TEXT, -- JSON string
+    achievements TEXT, -- JSON string
+    color TEXT,
+    date DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE TABLE IF NOT EXISTS settings (
+    key TEXT PRIMARY KEY,
+    value TEXT
+  );
+
+  -- Default settings
+  INSERT OR IGNORE INTO settings (key, value) VALUES ('primaryColor', '#4fc3d0');
+  INSERT OR IGNORE INTO settings (key, value) VALUES ('secondaryColor', '#3d35b5');
+  INSERT OR IGNORE INTO settings (key, value) VALUES ('accentColor', '#1a8080');
+  INSERT OR IGNORE INTO settings (key, value) VALUES ('backgroundColor', '#071525');
+  INSERT OR IGNORE INTO settings (key, value) VALUES ('borderRadius', '24px');
+  INSERT OR IGNORE INTO settings (key, value) VALUES ('fontSans', 'Inter');
+  INSERT OR IGNORE INTO settings (key, value) VALUES ('siteName', 'ElitePro');
+`);
+
+async function startServer() {
+  const app = express();
+  const PORT = 3000;
+
+  app.use(express.json());
+
+  // API Routes - Posts
+  app.get("/api/posts", (req, res) => {
+    try {
+      const posts = db.prepare("SELECT * FROM posts ORDER BY date DESC").all();
+      res.json(posts);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch posts" });
+    }
+  });
+
+  app.post("/api/posts", (req, res) => {
+    const { title, content, category } = req.body;
+    try {
+      const info = db.prepare("INSERT INTO posts (title, content, category) VALUES (?, ?, ?)").run(title, content, category);
+      res.status(201).json({ id: info.lastInsertRowid, title, content, category });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create post" });
+    }
+  });
+
+  app.put("/api/posts/:id", (req, res) => {
+    const { id } = req.params;
+    const { title, content, category } = req.body;
+    try {
+      db.prepare("UPDATE posts SET title = ?, content = ?, category = ? WHERE id = ?").run(title, content, category, id);
+      res.json({ id, title, content, category });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update post" });
+    }
+  });
+
+  app.delete("/api/posts/:id", (req, res) => {
+    const { id } = req.params;
+    try {
+      db.prepare("DELETE FROM posts WHERE id = ?").run(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete post" });
+    }
+  });
+
+  // API Routes - Projects
+  app.get("/api/projects", (req, res) => {
+    try {
+      const projects = db.prepare("SELECT * FROM projects ORDER BY date DESC").all();
+      res.json(projects.map(p => ({
+        ...p,
+        gallery: JSON.parse(p.gallery || "[]"),
+        achievements: JSON.parse(p.achievements || "[]")
+      })));
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch projects" });
+    }
+  });
+
+  app.post("/api/projects", (req, res) => {
+    const { title, client, type, category, description, image, gallery, achievements, color } = req.body;
+    try {
+      const info = db.prepare(`
+        INSERT INTO projects (title, client, type, category, description, image, gallery, achievements, color) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `).run(
+        title, client, type, category, description, image, 
+        JSON.stringify(gallery || []), 
+        JSON.stringify(achievements || []), 
+        color
+      );
+      res.status(201).json({ id: info.lastInsertRowid, ...req.body });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create project" });
+    }
+  });
+
+  app.put("/api/projects/:id", (req, res) => {
+    const { id } = req.params;
+    const { title, client, type, category, description, image, gallery, achievements, color } = req.body;
+    try {
+      db.prepare(`
+        UPDATE projects SET 
+          title = ?, client = ?, type = ?, category = ?, description = ?, 
+          image = ?, gallery = ?, achievements = ?, color = ? 
+        WHERE id = ?
+      `).run(
+        title, client, type, category, description, image, 
+        JSON.stringify(gallery || []), 
+        JSON.stringify(achievements || []), 
+        color, 
+        id
+      );
+      res.json({ id, ...req.body });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update project" });
+    }
+  });
+
+  app.delete("/api/projects/:id", (req, res) => {
+    const { id } = req.params;
+    try {
+      db.prepare("DELETE FROM projects WHERE id = ?").run(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete project" });
+    }
+  });
+
+  // API Routes - Settings
+  app.get("/api/settings", (req, res) => {
+    try {
+      const settings = db.prepare("SELECT * FROM settings").all();
+      const settingsObj = settings.reduce((acc: any, curr: any) => {
+        acc[curr.key] = curr.value;
+        return acc;
+      }, {});
+      res.json(settingsObj);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch settings" });
+    }
+  });
+
+  app.post("/api/settings", (req, res) => {
+    const settings = req.body;
+    try {
+      const upsert = db.prepare("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)");
+      const transaction = db.transaction((settings) => {
+        for (const [key, value] of Object.entries(settings)) {
+          upsert.run(key, value as string);
+        }
+      });
+      transaction(settings);
+      res.json({ status: "ok" });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update settings" });
+    }
+  });
+
+  // Vite middleware for development
+  if (process.env.NODE_ENV !== "production") {
+    const vite = await createViteServer({
+      server: { middlewareMode: true },
+      appType: "spa",
+    });
+    app.use(vite.middlewares);
+  } else {
+    app.use(express.static(path.join(__dirname, "dist")));
+    app.get("*", (req, res) => {
+      res.sendFile(path.join(__dirname, "dist", "index.html"));
+    });
+  }
+
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
+
+startServer();
