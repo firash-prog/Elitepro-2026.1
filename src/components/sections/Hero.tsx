@@ -16,32 +16,32 @@ export default function Hero() {
       const tl = gsap.timeline({ delay: 0.2 });
 
       // Initial Reveal
-      tl.from(imgRef.current, { 
-        scale: 1.1, 
-        opacity: 0, 
-        duration: 1.8, 
-        ease: 'power2.out' 
+      tl.from(imgRef.current, {
+        scale: 1.1,
+        opacity: 0,
+        duration: 1.8,
+        ease: 'power2.out'
       })
-      .from('.hero-line', { 
-        y: 100, 
-        opacity: 0, 
-        rotateX: -20,
-        duration: 1.2, 
-        stagger: 0.15, 
-        ease: 'power3.out' 
-      }, '-=1.2')
-      .from('.hero-cta', { 
-        y: 30, 
-        opacity: 0, 
-        duration: 1, 
-        ease: 'power2.out' 
-      }, '-=0.8')
-      .from(['.hero-bottom-left', '.hero-bottom-right'], { 
-        y: 20,
-        opacity: 0, 
-        duration: 1,
-        stagger: 0.2
-      }, '-=0.8');
+        .from('.hero-line', {
+          y: 100,
+          opacity: 0,
+          rotateX: -20,
+          duration: 1.2,
+          stagger: 0.15,
+          ease: 'power3.out'
+        }, '-=1.2')
+        .from('.hero-cta', {
+          y: 30,
+          opacity: 0,
+          duration: 1,
+          ease: 'power2.out'
+        }, '-=0.8')
+        .from(['.hero-bottom-left', '.hero-bottom-right'], {
+          y: 20,
+          opacity: 0,
+          duration: 1,
+          stagger: 0.2
+        }, '-=0.8');
 
       // Scroll Parallax
       gsap.to(imgRef.current, {
@@ -76,14 +76,16 @@ export default function Hero() {
 
   return (
     <section ref={containerRef} className="relative w-full h-screen overflow-hidden perspective-1000">
-      {/* Portrait Photo */}
+      {/* Background Video */}
       <div className="absolute inset-0 w-full h-full overflow-hidden">
-        <img
+        <video
           ref={imgRef}
-          src="https://picsum.photos/seed/amaterasu/1920/1080" // Placeholder
-          alt="Hero Portrait"
+          src="https://cdn.coverr.co/videos/coverr-people-at-a-concert-5460/1080p.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
           className="absolute inset-0 w-full h-[120%] object-cover object-[52%_30%] z-0 origin-center"
-          referrerPolicy="no-referrer"
         />
       </div>
 
@@ -102,11 +104,11 @@ export default function Hero() {
           </h1>
 
           {/* CTA Button */}
-          <button 
+          <button
             onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
-            className="hero-cta flex items-center gap-2 mt-9 px-8 md:px-10 py-[13px] bg-[#3d35b5] rounded-full border-none font-sans font-normal text-[10px] md:text-[11px] tracking-[0.3em] uppercase text-white shadow-[0_8px_30px_rgba(61,53,181,0.5)] transition-all hover:bg-[#3d35b5]/90 cursor-none hover:scale-105 active:scale-95 pointer-events-auto"
+            className="hero-cta flex items-center gap-2 mt-9 px-8 md:px-10 py-[13px] bg-[#37b99c] rounded-full border-none font-sans font-normal text-[10px] md:text-[11px] tracking-[0.3em] uppercase text-white shadow-[0_8px_30px_rgba(55,185,156,0.5)] transition-all hover:bg-[#37b99c]/90 cursor-none hover:scale-105 active:scale-95 pointer-events-auto"
           >
-            <span className="w-[6px] h-[6px] rounded-full bg-[#4fc3d0]" />
+            <span className="w-[6px] h-[6px] rounded-full bg-[#fce01a]" />
             Start your journey
           </button>
         </div>

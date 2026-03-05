@@ -10,7 +10,6 @@ import Services from '../components/sections/Services';
 import Portfolio from '../components/sections/Portfolio';
 import GuidingPrinciples from '../components/sections/GuidingPrinciples';
 import Testimonials from '../components/sections/Testimonials';
-import MeetAleph from '../components/sections/MeetAleph';
 import NewsSection from '../components/sections/NewsSection';
 import FooterCTA from '../components/sections/FooterCTA';
 
@@ -30,7 +29,6 @@ export default function Home() {
       <GuidingPrinciples />
       <Testimonials />
       <NewsSection />
-      <MeetAleph />
       <FooterCTA />
     </div>
   );

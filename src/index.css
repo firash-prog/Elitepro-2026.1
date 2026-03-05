@@ -13,10 +13,10 @@
 
   /* ═══ HERO ═══ */
   --hero-overlay-left: rgba(5,12,30,0.96);
-  --hero-teal-right: #00c8c8;
+  --hero-teal-right: #37b99c;
   --hero-heading: #ffffff;
-  --hero-btn: #3d35b5; /* medium indigo-purple */
-  --hero-btn-shadow: rgba(61,53,181,0.5);
+  --hero-btn: #37b99c; /* brand teal */
+  --hero-btn-shadow: rgba(55,185,156,0.5);
   --hero-body: rgba(255,255,255,0.78);
   --hero-label: rgba(255,255,255,0.55);
 
@@ -25,7 +25,7 @@
   --dark-right-glow: radial-gradient(ellipse at 100% 50%, rgba(26,160,180,0.35) 0%, transparent 50%);
   --dark-text: #ffffff;
   --dark-circle-stroke: rgba(255,255,255,0.12);
-  --dark-label-dot: #4fc3d0; /* teal dot before section labels */
+  --dark-label-dot: #fce01a; /* yellow dot before section labels */
 
   /* ═══ PALE/LIGHT SECTIONS (Vision, Innovating, Meet Aleph) ═══ */
   --white-bg: #ffffff;
@@ -39,15 +39,15 @@
   --footer-muted: rgba(255,255,255,0.45);
 
   /* ═══ TRIANGLE (Innovating section) ═══ */
-  --triangle-top: #1a5878;
-  --triangle-bottom: #4fc3d0;
+  --triangle-top: #fce01a;
+  --triangle-bottom: #37b99c;
 
   /* ═══ UNIVERSAL UI ═══ */
   --center-line: rgba(255,255,255,0.20);
   --center-line-glow: rgba(255,255,255,0.06);
   --cursor-ring: rgba(255,255,255,0.55);
   --scroll-arrow-border: rgba(255,255,255,0.3);
-  --section-dot: #4fc3d0;
+  --section-dot: #37b99c;
 }
 
 body {
