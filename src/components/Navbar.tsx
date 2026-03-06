@@ -66,9 +66,10 @@ export default function Navbar() {
             {/* 3x3 Dot Grid */}
             <div
               ref={gridRef}
-              className="grid grid-cols-3 gap-[5px] pointer-events-auto cursor-pointer p-2 -m-2"
+              className="grid grid-cols-3 gap-[5px] pointer-events-auto cursor-pointer p-2 -m-2 transition-transform duration-300 hover:scale-110"
               onMouseEnter={handleGridHover}
               onMouseLeave={handleGridLeave}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {Array(9).fill(0).map((_, i) => (
                 <div key={i} className="w-[3px] h-[3px] rounded-full bg-white opacity-65" />
@@ -78,9 +79,17 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
-      <div className={`fixed inset-0 z-[90] bg-[#071525] transition-transform duration-500 ease-expo ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'} md:hidden`}>
-        <div className="flex flex-col items-center justify-center h-full gap-8">
+      {/* Fullscreen Menu Overlay */}
+      <div className={`fixed inset-0 z-[90] bg-[#071525] transition-transform duration-500 ease-expo ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'}`}>
+        <div className="flex flex-col items-center justify-center h-full gap-8 relative">
+          {/* Close button for desktop overlay (if they don't click the grid again) */}
+          <button
+            onClick={() => setIsMenuOpen(false)}
+            className="absolute top-8 right-8 md:top-10 md:right-10 text-white/50 hover:text-white transition-colors pointer-events-auto hidden md:block"
+          >
+            <X size={32} />
+          </button>
+
           <a href="/" onClick={() => setIsMenuOpen(false)} className="text-2xl font-light tracking-[0.2em] uppercase text-white/90 hover:text-[#37b99c] transition-colors">Home</a>
           <a href="/portfolio" onClick={() => setIsMenuOpen(false)} className="text-2xl font-light tracking-[0.2em] uppercase text-white/90 hover:text-[#37b99c] transition-colors">Portfolio</a>
           <a href="/admin" onClick={() => setIsMenuOpen(false)} className="text-2xl font-light tracking-[0.2em] uppercase text-white/90 hover:text-[#37b99c] transition-colors">Admin</a>
