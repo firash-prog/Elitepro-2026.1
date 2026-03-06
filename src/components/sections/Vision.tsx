@@ -7,12 +7,10 @@ gsap.registerPlugin(ScrollTrigger);
 export default function Vision() {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLHeadingElement>(null);
-  const planetRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       const text = textRef.current;
-      const planet = planetRef.current;
 
       if (text) {
         // Split text logic
@@ -46,23 +44,7 @@ export default function Vision() {
         });
       }
 
-      if (planet) {
-        gsap.fromTo(planet,
-          { y: '80%', scale: 0.8, opacity: 0 }, // Start smaller and invisible
-          {
-            y: '-40%', // Move up more to cover screen
-            scale: 1.5, // Expand more to flatten the curve
-            opacity: 1,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: 'top bottom', // Start earlier
-              end: 'bottom top',
-              scrub: 0, // Instant response
-            }
-          }
-        );
-      }
+
     }, containerRef);
 
     return () => ctx.revert();
@@ -89,12 +71,6 @@ export default function Vision() {
         We empower businesses and individuals with the expertise, infrastructure, and creativity to deliver events that create lasting impact and unprecedented results.
       </h2>
 
-      {/* Rising Planet Transition Element */}
-      <div
-        ref={planetRef}
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[120vw] h-[120vw] rounded-full bg-[#050c1e] z-10 pointer-events-none"
-        style={{ transform: 'translateY(80%) scale(1.2)' }}
-      />
-    </section >
+    </section>
   );
 }
